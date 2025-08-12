@@ -1,4 +1,5 @@
 const { defineConfig } = require("cypress");
+const { verifyDownloadTasks } = require('cy-verify-downloads');
 
 module.exports = defineConfig({
   //prvy parameter / namtest pocas vyvoja 2 potom 0
@@ -13,6 +14,7 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: 'https://ud-fe.k8stage.ulovdomov.cz',
     setupNodeEvents(on, config) {
+      on('task', verifyDownloadTasks);
       // implement node event listeners here
     },
   }

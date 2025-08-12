@@ -18,6 +18,12 @@
   },
   "homepage": "https://github.com/Jurajjjjj1988/ulovdomov.cz#readme",
   "dependencies": {
-    "cypress": "^14.3.3"
+    "cypress": "^14.3.3",
+    "cypress-plugin-steps": "^1.2.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "cy-verify-downloads": "^0.2.6",
+    "cypress-file-upload": "^5.0.8"
   }
 }

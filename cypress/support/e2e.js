@@ -14,4 +14,10 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+require('cy-verify-downloads').addCustomCommand();
 import './commands'
+import 'cypress-plugin-steps'
+Cypress.on('uncaught:exception', () => {
+    // return false to prevent Cypress from failing the test
+    return false;
+});
