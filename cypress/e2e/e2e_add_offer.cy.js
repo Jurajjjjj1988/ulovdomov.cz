@@ -1,296 +1,228 @@
-//import 'cypress-file-upload';
-import {checkUrl, checkReq, catchReq}
-from "../support/utilities";
+import HomePage from '../pages/homePage';
+import AddOfferPage from '../pages/addOfferPage';
+import {checkUrl, checkReq, catchReq, testStep} from "../support/utilities";
 
 describe('add_offer_e2e', () => {
-
     it.only('should create a new rent offer for House from reality agent', () => {
+        testStep('Visit add-offer start page');
+        cy.visit('https://ud-fe.k8stage.ulovdomov.cz/vlozeni-inzeratu/formular/typ-inzerce');
+        cy.url().should('include', '/typ-inzerce');
 
-        cy.visit('https://ud-fe.k8stage.ulovdomov.cz/vlozeni-inzeratu/formular/typ-inzerce')
-        cy.get('[data-test="navbar.hamburgerButton"]').click();
-        cy.contains('button', 'Přihlásit se').click();
-
-        cy.get('#email').clear().type('juraj.kapusansky@gmail.com');
-        cy.get('[data-test="loginModal.identification.form.button"]').click();
-
-
-        cy.get('[data-test="loginModal.signIn.form.passwordInput"]', { timeout: 15000 })
+        testStep('Login');
+        HomePage.hamburgerButton()
+            .click();
+        HomePage.loginButton()
+            .click();
+        HomePage.emailInput()
+            .clear()
+            .type('juraj.kapusansky@gmail.com');
+        HomePage.emailSubmitButton()
+            .click();
+        HomePage.passwordInput()
             .should('be.visible')
             .clear()
             .type('test123');
-
-        cy.get('[data-test="loginModal.signIn.form.button"]').click();
-
-
-        cy.get('[data-test="navbar.content.addOffer"]').click();
-
-        cy.contains('h4', 'Inzerovat sám').click();
-        cy.contains('p', 'Soukromý majitel').click();
-
-        cy.get('#firstName').clear().type('Juraj');
-        cy.get('#lastName').clear().type('Kapusansky');
-
-        cy.get('[data-test="global.phoneInput.suggestPrefix"]').click();
-        cy.contains('.chakra-stack.css-84zodg p', '+420', {timeout: 5000}).click({force: true});
-        cy.get('[data-test="offerContact.phone"]').clear().type('917863834');
-
-        cy.contains('button', 'Další').click();
-
-        cy.contains('p', 'Pronájem').click();
-        cy.contains('p', 'Dům').click();
-        cy.get('[name="houseType"]').select('villa');
-        cy.contains('label', '1 pokoj').click();
-
-        cy.contains('label', 'Dům')
-            .invoke('attr', 'data-checked')
-            .should('not.be.null');
-
-        cy.contains('label', 'Pronájem')
-            .invoke('attr', 'data-checked')
-            .should('not.be.null');
-
-        cy.get('[name="houseType"]')
-            .should('have.value', 'villa');
-
-        cy.contains('button', 'Pokračovat').click();
-
-        // cy.intercept('GET', '**/vlozeni-inzeratu/formular/lokalita*').as('lokalita');
-        // cy.wait('@lokalita').its('response.statusCode').should('eq', 200);
-
-        // catchReq('GET', '**/vlozeni-inzeratu/formular/lokalita*').as('lokalita')
-        // checkReq('lokalita', '200')
-
-        checkUrl('/lokalita');
-
-
-        cy.get('[data-test="offer.address.town.searchInput"]').clear().type(`Brno{enter}`)
-        catchReq('GET', '**/address/street-combined-whisper?term=*').as('ulica')
-        cy.get('[data-test="offer.address.street.searchInput"]').clear().type(`Bay`);
-
-        checkReq('ulica',200);
-        cy.get('[data-test="offer.address.street.popover"]')
-            .find('p')
-            .first()
+        HomePage.passwordSubmitButton()
             .click();
 
-        cy.get('#newoffer-mapbox').should('be.visible');
-        cy.contains('button', 'Další').click();
-        checkUrl('/popis');
-
-
-        cy.contains('p', 'Nezařízené').click();
-        cy.get('input[name="usableArea"]').clear().type('50');
-        cy.get('input[name="estateArea"]').clear().type('100');
-        cy.get('input[name="builtUpArea"]').clear().type('70');
-        cy.contains('div','Bazén');
-        cy.get('select[name="efficiency"]').select('b');
-
-
-        cy.contains('label', 'Nezařízené')
-            .invoke('attr', 'data-checked')
-            .should('not.be.null');
-
-        cy.get('[name="usableArea"]')
-            .should('have.value', '50');
-
-        cy.get('[name="estateArea"]')
-            .should('have.value', '100');
-
-        cy.get('[name="builtUpArea"]')
-            .should('have.value', '70');
-
-        cy.contains('div', 'Bazén')
-            .invoke('attr', 'data-checked')
-            .should('not.be.null');
-
-        cy.contains('button', 'Další').click();
-
-
-        cy.get('label').contains('Přízemní').click();
-        cy.get('select[name="condition"]').select('Velmi dobrý');
-        cy.get('select[name="material"]').select('Cihlová');
-
-        cy.contains('p','Samostatný').click();
-        cy.get('select[name="locationType"]').select('Centrum obce');
-        cy.get('select[name="surroundings"]').select('Obytná');
-        cy.contains('p','Ochranné pásmo').click();
-
-        cy.contains('label', 'Přízemní')
-            .invoke('attr', 'data-checked')
-            .should('not.be.null');
-
-        cy.get('[name="condition"] option:selected')
-            .should('have.text', 'Velmi dobrý');
-
-        cy.get('[name="material"] option:selected')
-            .should('have.text', 'Cihlová');
-
-        cy.contains('label', 'Samostatný')
-            .invoke('attr', 'data-checked')
-            .should('not.be.null');
-
-        cy.get('[name="locationType"] option:selected')
-            .should('have.text', 'Centrum obce');
-
-        cy.get('[name="surroundings"] option:selected')
-            .should('have.text', 'Obytná');
-
-        cy.contains('label', 'Ochranné pásmo')
-            .invoke('attr', 'data-checked')
-            .should('not.be.null');
-
-        cy.contains('button', 'Další').click();
-
-        cy.get('[data-test="global.textarea"]')
+        testStep('Go to add offer');
+        HomePage.addOfferButton()
+            .click();
+        cy.contains('h4', 'Inzerovat sám')
             .should('be.visible')
+            .click();
+        cy.contains('p', 'Soukromý majitel')
+            .should('be.visible')
+            .click();
+
+        testStep('Fill contact info');
+        AddOfferPage.firstNameInput()
+            .clear()
+            .type('Juraj')
+            .should('have.value', 'Juraj');
+        AddOfferPage.lastNameInput()
+            .clear()
+            .type('Kapusansky')
+            .should('have.value', 'Kapusansky');
+        AddOfferPage.phonePrefixButton()
+            .click();
+        cy.contains('.chakra-stack.css-84zodg p', '+421')
+            .click({force: true});
+        AddOfferPage.phoneInput()
+            .clear()
+            .type('917863834')
+            .should('have.value', '917863834');
+        AddOfferPage.nextButton()
+            .should('not.be.disabled')
+            .click();
+
+        testStep('Select offer type');
+        AddOfferPage.rentOption()
+            .click()
+        AddOfferPage.houseOption()
+            .click()
+        AddOfferPage.houseTypeSelect()
+            .should('be.enabled')
+            .find('option[value="villa"]')
+            .should('exist');
+        AddOfferPage.houseTypeSelect()
+            .select('villa')
+            .should('have.value', 'villa');
+        AddOfferPage.roomOneOption()
+            .click().should('contain.text', '1 pokoj');
+        AddOfferPage.continueButton()
+            .should('not.be.disabled')
+            .click();
+        checkUrl('/lokalita');
+
+        testStep('Fill address');
+        AddOfferPage.townInput()
+            .clear().type('Brno{enter}')
+            .should('have.value', 'Brno');
+        catchReq('GET', '**/address/street-combined-whisper?term=*')
+            .as('ulica');
+        AddOfferPage.streetInput()
+            .clear()
+            .type('Bay');
+        checkReq('ulica', 200);
+        AddOfferPage.streetPopover()
+            .find('p')
+            .first()
+            .should('be.visible')
+            .click();
+        AddOfferPage.mapBox()
+            .should('be.visible');
+        AddOfferPage.nextButton()
+            .should('not.be.disabled')
+            .click();
+
+        testStep('Fill property details');
+        checkUrl('/popis');
+        AddOfferPage.furnishedOption()
+            .click()
+        AddOfferPage.usableAreaInput()
+            .clear().type('50')
+            .should('have.value', '50');
+        AddOfferPage.estateAreaInput()
+            .clear().type('100')
+            .should('have.value', '100');
+        AddOfferPage.builtUpAreaInput()
+            .clear().type('70')
+            .should('have.value', '70');
+        AddOfferPage.efficiencySelect()
+            .select('b')
+            .should('have.value', 'b');
+        AddOfferPage.poolCheckbox()
+            .click()
+        AddOfferPage.nextButton()
+            .should('not.be.disabled')
+            .click();
+
+        testStep('Fill building details');
+        AddOfferPage.floorOption()
+            .click()
+        AddOfferPage.conditionSelect()
+            .select('Velmi dobrý')
+            .should('have.value', 'veryGood');
+        AddOfferPage.materialSelect()
+            .select('Cihlová')
+            .should('have.value', 'brick');
+        AddOfferPage.locationTypeSelect()
+            .select('Centrum obce')
+            .should('have.value', 'cityCenter');
+        AddOfferPage.surroundingsSelect()
+            .select('Obytná')
+            .should('have.value', 'residential');
+        AddOfferPage.nextButton()
+            .should('not.be.disabled')
+            .click();
+
+        testStep('Fill description');
+        AddOfferPage.additionalDescriptionInput()
             .type('Byt s výhľadom na Vysoke tatry.')
             .invoke('val')
             .should('have.length.greaterThan', 10);
+        AddOfferPage.nextButton().should('not.be.disabled')
+            .click();
 
-        cy.contains('button', 'Další').click();
-
-        cy.get('input[name="price"]').clear().type('15000')
-        cy.get('input[name="depositPrice"]').clear().type('13000')
-        cy.contains('p','bez provize').click();
-        cy.get('input[name="monthlyFeesPrice"]').clear().type('5000')
-        cy.get('input[name="descriptionPrice"]').clear().type('Poznamka')
-        cy.contains('p','Ihned').click();
-
-        cy.get('[data-test="global.writeBox"] input[placeholder]')
+        testStep('Fill price info');
+        AddOfferPage.priceInput()
+            .clear()
+            .type('15000')
+            .should('have.value', '15000');
+        AddOfferPage.depositInput()
+            .clear()
+            .type('13000')
+            .should('have.value', '13000');
+        AddOfferPage.monthlyFeesInput()
+            .clear()
+            .type('5000').should('have.value', '5000');
+        AddOfferPage.noteInput()
+            .clear()
+            .type('Poznamka')
+            .should('have.value', 'Poznamka');
+        AddOfferPage.noCommissionOption()
+            .click()
+        AddOfferPage.immediatelyOption()
+            .click()
+        AddOfferPage.availableFromInput()
             .first()
             .type('6. 6. 2025')
             .should('have.value', '6. 6. 2025');
-
-        cy.get('[data-test="global.writeBox"] input.chakra-input')
+        AddOfferPage.availableToInput()
             .last()
             .type('6. 10. 2025')
             .should('have.value', '6. 10. 2025');
+        AddOfferPage.nextButton()
+            .should('not.be.disabled')
+            .click();
 
-    cy.get('[name="price"]')
-        .should('have.value', '15000');
-    cy.get('[name="depositPrice"]')
-        .should('have.value', '13000');
+        testStep('Upload image');
+        AddOfferPage.saveAndContinueButton()
+            .should('not.be.disabled')
+            .click();
+        AddOfferPage.uploadFileInput()
+            .first()
+            .selectFile('cypress/fixtures/attach.jpg', {force: true})
+            .should('have.prop', 'files')
+            .its('0.name')
+            .should('eq', 'attach.jpg');
+        AddOfferPage.saveAndContinueButton()
+            .should('not.be.disabled')
+            .click();
 
+        testStep('Publish offer with promo code');
+        AddOfferPage.standardPlan()
+            .click({force: true});
+        AddOfferPage.publishButton()
+            .should('not.be.disabled')
+            .click();
+        AddOfferPage.discountButton()
+            .should('be.visible')
+            .click();
+        AddOfferPage.discountInput()
+            .type('TESTOVACIKODINZ')
+            .should('have.value', 'TESTOVACIKODINZ');
+        AddOfferPage.discountSubmit()
+            .should('not.be.disabled')
+            .click();
+        AddOfferPage.modalOkButton()
+            .should('be.visible')
+            .click();
+        AddOfferPage.submitPaymentButton()
+            .should('not.be.disabled')
+            .click();
+        AddOfferPage.modalOkButton()
+            .should('be.visible')
+            .click();
 
-    cy.contains('label', 'bez provize')
-        .invoke('attr', 'data-checked')
-        .should('not.be.null');
+        testStep('Show new offer');
+        AddOfferPage.showOfferButton()
+            .first()
+            .click();
 
-    cy.get('[name="monthlyFeesPrice"]')
-        .should('have.value', '5000');
-
-    cy.contains('label', 'Ihned')
-        .invoke('attr', 'data-checked')
-        .should('not.be.null');
-
-
-        cy.contains('button', 'Další').click();
-
-        cy.contains('button', 'Uložit a pokračovat').click();
-
-
-
-        cy.get('input[type=file]').selectFile('cypress/fixtures/attach.jpg')
-
-        cy.contains('button', 'Uložit a pokračovat').click();
-
-        cy.get('[value="STANDARD"]').click({force: true});
-        cy.contains('a','Zveřejnit').click();
-
-        cy.get('[data-test="payment.discountCode.button"]').click()
-        cy.get('[data-test="paymentMethod.discountCode.input"]').type('TESTOVACIKODINZ');
-        cy.get('[data-test="paymentMethod.discountCode.submit"]').click();
-        cy.get('[data-test="alertModal.button"]').click();
-        cy.get('[data-test="submitPaymetMethod"]').click();
-        cy.get('[data-test="alertModal.button"]').click();
     });
 });
 
-        // dokoncit inzerat na kontrolu obsahu cez moje inzeraty
-        // test zmazania inzeratu
-
-    // it('should create a new sell offer for flat from private owner', () => {
-    //
-    //     cy.visit('https://ulovdomov.cz')
-    //     cy.get('[data-test="navbar.hamburgerButton"]').click();
-    //     cy.contains('button', 'Přihlásit se').click();
-    //
-    //     cy.get('#email').clear().type('juraj.kapusansky@gmail.com');
-    //     cy.get('[data-test="loginModal.identification.form.button"]').click();
-    //
-    //     //cy.contains('[data-test="loginOption"]', 'Realitní makléř').click();
-    //
-    //     cy.get('[data-test="loginModal.signIn.form.passwordInput"]', { timeout: 15000 })
-    //         .should('be.visible')
-    //         .clear()
-    //         .type('test123');
-    //
-    //     cy.get('[data-test="loginModal.signIn.form.button"]').click();
-    //
-    //
-    //     cy.get('[data-test="navbar.content.addOffer"]').click();
-    //
-    //     cy.contains('h4', 'Inzerovat sám').click();
-    //     cy.contains('p', 'Soukromý majitel').click();
-    //
-    //     cy.get('#firstName').clear().type('Juraj');
-    //     cy.get('#lastName').clear().type('Kapusansky');
-    //     //cy.get('#email').clear().type('juraj.kapusansky@gmail.com');
-    //     cy.get('[data-test="global.phoneInput.suggestPrefix"]').click();
-    //     cy.contains('.chakra-stack.css-84zodg p', '+420', {timeout: 5000}).click({force: true});
-    //     cy.get('[data-test="offerContact.phone"]').clear().type('917863834');
-    //
-    //     cy.contains('button', 'Další').click();
-    //
-    //     cy.contains('p', 'Prodej').click();
-    //     cy.contains('p', 'Byt').click();
-    //     cy.get('select[name="disposition"]').select('3+1');
-    //     cy.contains('button', 'Pokračovat').click();
-    //
-    //     cy.get('[data-test="offer.address.town.searchInput"]').clear().type(`Brno{enter}`)
-    //     cy.get('[data-test="offer.address.street.searchInput"]').clear().type(`Bayerova{enter}`);
-    //
-    //     cy.contains('p', 'Nezařízené').click();
-    //     cy.get('input[name="usableArea"]').clear().type('55');
-    //     cy.get('input[name="floorNumber"]').clear().type('3');
-    //     cy.get('input[name="totalFloors"]').clear().type('5');
-    //     cy.contains('div','Terasa');
-    //     cy.contains('div','Zahrada');
-    //     cy.get('select[name="efficiency"]').select('b');
-    //     cy.contains('button', 'Další').click();
-    //
-    //     cy.contains('p','Osobní').click();
-    //     cy.get('select[name="condition"]').select('veryGood');
-    //     cy.get('select[name="material"]').select('brick');
-    //     cy.contains('p','Loft').click();
-    //     cy.get('select[name="locationType"]').select('outskirts');
-    //     cy.get('select[name="surroundings"]').select('residential');
-    //     cy.contains('button', 'Další').click();
-    //
-    //     cy.get('textarea[name="description"]').clear().type('Dom s výhľadom na Vysoke tatry.')
-    //     cy.contains('button', 'Další').click();
-    //
-    //     cy.get('input[name="price"]').clear().type('15000')
-    //     cy.get('input[name="depositPrice"]').clear().type('15000')
-    //     cy.contains('p','bez provize').click();
-    //     cy.get('input[name="depositPrice"]').clear().type('15000')
-    //     cy.get('input[name="descriptionPrice"]').clear().type('15000')
-    //     cy.contains('p','Ihned').click();
-    //
-    //     cy.get('[data-test="global.writeBox"] input[placeholder]')
-    //         .clear()
-    //         .first()
-    //         .type('6. 6. 2025');
-    //
-    //     cy.get('[data-test="global.writeBox"] input.chakra-input')
-    //         .clear()
-    //         .last()
-    //         .type('6. 10. 2025');
-    //     cy.contains('button', 'Další').click();
-    //     cy.contains('button', 'Uložit a pokračovat').click();
-    //
-    //     //cy.get('input[type="file"]').attachFile('attach.jpg');
-    //     cy.contains('button', 'Uložit a pokračovat').click();
-    //
-    //     cy.get('[value="STANDARD"]').click({force: true});
-    //     cy.contains('a','Zveřejnit').click();
+//neviem ako urobit should na zakliknute polia. Malo by top byt nejako cez data checked ale neviem ci cez have value alebo have attr.?
+//Nefungovalo mi to nijako

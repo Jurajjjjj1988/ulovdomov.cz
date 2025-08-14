@@ -2,8 +2,8 @@ import {
     createEmail,
     checkUrl
 } from '../support/utilities'
-import Homepage from '../pages/homepage0'
-import AddOffer from '../pages/addOffer'
+import Homepage from '../pages/homePage'
+import AddOffer from '../pages/addOfferPage'
 import {
     openPage
 } from "../support/utilities";
