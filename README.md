@@ -1,2 +1,0 @@
-# ulovdomov.cz
-test stranky

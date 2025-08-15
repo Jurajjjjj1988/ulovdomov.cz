@@ -1,12 +1,12 @@
 import HomePage from '../pages/homePage';
 import AddOfferPage from '../pages/addOfferPage';
-import {checkUrl, checkReq, catchReq, testStep} from "../support/utilities";
+import {checkUrl, checkReq, catchReq, testStep, openPage} from "../support/utilities";
 
 describe('add_offer_e2e', () => {
     it.only('should create a new rent offer for House from reality agent', () => {
         testStep('Visit add-offer start page');
-        cy.visit('https://ud-fe.k8stage.ulovdomov.cz/vlozeni-inzeratu/formular/typ-inzerce');
-        cy.url().should('include', '/typ-inzerce');
+        openPage('https://ud-fe.k8stage.ulovdomov.cz/vlozeni-inzeratu/formular/typ-inzerce');
+        checkUrl('/typ-inzerce')
 
         testStep('Login');
         HomePage.hamburgerButton()
@@ -28,10 +28,10 @@ describe('add_offer_e2e', () => {
         testStep('Go to add offer');
         HomePage.addOfferButton()
             .click();
-        cy.contains('h4', 'Inzerovat sám')
+        AddOfferPage.inzerovatSamButton()
             .should('be.visible')
             .click();
-        cy.contains('p', 'Soukromý majitel')
+        AddOfferPage.soukromyMajitelButton()
             .should('be.visible')
             .click();
 
@@ -220,9 +220,5 @@ describe('add_offer_e2e', () => {
         AddOfferPage.showOfferButton()
             .first()
             .click();
-
-    });
+    })
 });
-
-//neviem ako urobit should na zakliknute polia. Malo by top byt nejako cez data checked ale neviem ci cez have value alebo have attr.?
-//Nefungovalo mi to nijako

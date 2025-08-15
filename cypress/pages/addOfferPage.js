@@ -1,5 +1,13 @@
 class AddOfferPage {
 
+    inzerovatSamButton() {
+        return cy.contains('h4', 'Inzerovat sám');
+    }
+
+    soukromyMajitelButton() {
+        return cy.contains('p', 'Soukromý majitel');
+    }
+
     firstNameInput() {
         return cy.get('#firstName');
     }
